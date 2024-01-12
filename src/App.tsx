@@ -1,10 +1,13 @@
-import AppRouter from "./routers/AppRouter"
-
+import TopBar from "./components/TopBar";
+import AppRouter from "./routers/AppRouter";
 
 function App() {
   return (
-    <AppRouter />
-  )
+    <div className="App">
+      <TopBar />
+      <AppRouter />
+    </div>
+  );
 }
 
-export default App
+export default App;

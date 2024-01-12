@@ -1,5 +1,3 @@
-// create slice for util
-
 import { createSlice } from "@reduxjs/toolkit";
 import { ThemeEnum, UtilState } from "../types/util.type";
 

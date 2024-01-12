@@ -1,0 +1,148 @@
+.chat-container {
+  max-width: calc(100vw - 40px);
+  height: calc(100vh - 80px);
+  margin: 20px auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+  overflow: hidden; /* Hide overflow to clip the rounded borders */
+  display: flex;
+  flex-direction: column; /* Reverse the order of the flex container */
+}
+
+.welcome-msg {
+  text-align: center;
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 18px;
+  color: #333;
+}
+
+.chat-history {
+  height: calc(100vh - 140px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Align messages to the right */
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: auto; /* Push messages to the bottom of the container */
+}
+
+.message {
+  width: max-content;
+  max-width: 80%;
+  margin: 5px;
+  padding: 10px;
+
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 500;
+  border-radius: 8px;
+  display: inline-block;
+  word-wrap: break-word;
+}
+
+.user {
+  text-align: right;
+  width: max-content;
+  max-width: 80%;
+  background-color: #e0f7fa;
+  align-self: flex-end; /* Align user messages to the right */
+}
+
+.assistant {
+  text-align: left;
+  background-color: #dbeedc;
+  align-self: flex-start; /* Align assistant messages to the left */
+}
+
+/* resetting markdown default style */
+.message p {
+  margin: 0;
+  padding: 0;
+}
+
+.msg-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 5px;
+}
+
+.msg-wrapper .msg {
+  width: calc(100% - 30px);
+  text-align: left;
+}
+
+.msg-role {
+  height: 30px;
+  background: #fff;
+  width: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.msg-role .bot,
+.msg-role .user {
+  height: 30px;
+  width: 30px;
+  object-fit: cover;
+}
+
+.system {
+  display: none;
+  text-align: left;
+  background-color: #dbeedc;
+  align-self: flex-start; /* Align assistant messages to the left */
+}
+
+.input-container {
+  margin-top: 10px;
+  display: flex;
+}
+
+input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  width: 100px;
+  margin-left: 10px;
+  padding: 8px;
+  border: 1px solid #4caf50;
+  border-radius: 5px;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+}
+
+/* loader style */
+
+.loader {
+  width: 12px;
+  height: 12px;
+  border: 5px solid #fff;
+  border-bottom-color: #0d338e;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

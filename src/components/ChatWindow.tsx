@@ -1,9 +1,13 @@
 import { Tooltip } from "@mui/joy";
+import { nanoid } from "@reduxjs/toolkit";
 import { MdArrowForwardIos } from "react-icons/md";
+import { Route, Routes } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/stote";
 import { UtilActions } from "../redux/util.slice";
+import Chat from "./Chat";
 
 const ChatWindow = () => {
+    const chatId = nanoid();
     const { isNavigationOpenState } = useAppSelector(state => state.util);
     const dispatch = useAppDispatch();
     const toggleNavigation = () => {
@@ -20,6 +24,10 @@ const ChatWindow = () => {
                     </Tooltip>
                 </div>
             </div> : null}
+            <Routes>
+                <Route path="/" element={<Chat />} />
+                <Route path={`/chat/${chatId}`} element={<Chat />} />
+            </Routes>
         </div>
     )
 }
