@@ -1,7 +1,9 @@
 
 const ChatNavigation = () => {
     return (
-        <div>ChatNavigation</div>
+        <div className="chat-navigation-container">
+
+        </div>
     )
 }
 

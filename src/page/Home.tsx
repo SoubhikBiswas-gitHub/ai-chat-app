@@ -1,7 +1,12 @@
+import ChatNavigation from "../components/ChatNavigation"
+import ChatWindow from "../components/ChatWindow"
 
 const Home = () => {
     return (
-        <div>Home</div>
+        <div className="home-page-container">
+            <ChatNavigation />
+            <ChatWindow />
+        </div>
     )
 }
 
