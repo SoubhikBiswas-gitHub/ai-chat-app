@@ -1,17 +1,17 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
+import { UtilReducer } from "./util.slice";
 
-const rootReducer = combineReducers({});
+const rootReducer = combineReducers({
+  util: UtilReducer,
+});
 
 const store = configureStore({
   reducer: rootReducer,
 });
 
-// export const persistor = persistStore(store);
-
 export default store;
 
-// For better usage with typescript
 export type RootStateType = ReturnType<typeof store.getState>;
 export type AppDispatchType = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatchType = useDispatch;
