@@ -3,7 +3,7 @@ import { ThemeEnum, UtilState } from "../types/util.type";
 
 const initialState: UtilState = {
   isNavigationOpenState: true,
-  themeState: ThemeEnum.LIGHT,
+  themeState: ThemeEnum.DARK,
 };
 
 export const utilSlice = createSlice({
