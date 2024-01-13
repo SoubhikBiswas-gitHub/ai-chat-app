@@ -4,5 +4,5 @@ export enum ThemeEnum {
 }
 export interface UtilState {
   isNavigationOpenState: boolean;
-  themeState: ThemeEnum.LIGHT;
+  themeState: ThemeEnum;
 }

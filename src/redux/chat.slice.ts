@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ChatState } from "../types/chat.type";
+import { ChatInteractionStatusEnum, ChatState } from "../types/chat.type";
 
 const initialState: ChatState = {
   chatsList: [],
@@ -23,6 +23,30 @@ export const chatSlice = createSlice({
     },
     setActiveChatId: (state, action) => {
       state.activeChatId = action.payload;
+    },
+    setLikeMessage: (state, action) => {
+      const { chatId, messageId } = action.payload;
+      if (state.chatsContent && state.chatsContent[chatId]) {
+        const updatedChat = state.chatsContent[chatId].map((message) =>
+          message.id === messageId
+            ? { ...message, status: ChatInteractionStatusEnum.LIKE }
+            : message
+        );
+        state.chatsContent = { ...state.chatsContent, [chatId]: updatedChat };
+      }
+    },
+
+    setDislikeMessage: (state, action) => {
+      const { chatId, messageId } = action.payload;
+      if (state.chatsContent) {
+        const chat = state.chatsContent[chatId];
+        const messageIndex = chat.findIndex(
+          (message) => message.id === messageId
+        );
+        if (messageIndex !== -1) {
+          chat[messageIndex].status = ChatInteractionStatusEnum.DISLIKE; // or use an enum if you have it defined
+        }
+      }
     },
   },
 });

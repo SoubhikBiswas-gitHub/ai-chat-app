@@ -1,9 +1,10 @@
 import { nanoid } from "@reduxjs/toolkit";
 import React, { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import bot from "../assets/machine.png";
 import user from "../assets/user.png";
 import { ChatActions } from "../redux/chat.slice";
-import { useAppDispatch, useAppSelector } from "../redux/stote";
+import { useAppDispatch, useAppSelector } from "../redux/store";
 import { AuthorEnum, ChatInteractionStatusEnum, Message } from "../types/chat.type";
 
 const Chat: React.FC = () => {
@@ -19,11 +20,19 @@ const Chat: React.FC = () => {
         dispatch(ChatActions.setActiveChatId(nanoid()));
     }, [dispatch]);
 
-    const scrollToBottom = () => {
-        chatContainerRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
+    const activeChatHistory = chatsContent && chatsContent[activeChatId] ? chatsContent[activeChatId] : [];
+
+
 
     useEffect(() => {
+        const scrollToBottom = () => {
+            const container = chatContainerRef.current;
+            if (container) {
+                container.scrollTop = container.scrollHeight;
+            }
+        };
+
+
         scrollToBottom();
     }, [chatHistory]);
 
@@ -50,7 +59,7 @@ const Chat: React.FC = () => {
         if (chatLoading || !userMessage.trim()) return;
 
         setChatLoading(true);
-
+        await new Promise(resolve => setTimeout(resolve, 100));
         const newUserMessage = {
             id: nanoid(),
             author: AuthorEnum.USER,
@@ -60,15 +69,17 @@ const Chat: React.FC = () => {
         setChatHistory(prevHistory => [...prevHistory, newUserMessage]);
         setUserMessage("");
 
+
         try {
             const gptResponse = await simulateGPTResponse(userMessage);
             const botMessage = {
                 id: nanoid(),
                 author: AuthorEnum.BOT,
                 content: gptResponse,
-                status: ChatInteractionStatusEnum.LIKE,
+                status: ChatInteractionStatusEnum.NO_INTERACTION,
             };
             setChatHistory(prevHistory => [...prevHistory, botMessage]);
+
         } catch (error) {
             console.error("Error sending message to GPT API:", error);
         } finally {
@@ -85,14 +96,29 @@ const Chat: React.FC = () => {
         }
     };
 
+    const handleChatEnd = () => {
+
+    }
+
+    const handleChatLike = (messageId: string) => {
+        dispatch(ChatActions.setLikeMessage({ chatId: activeChatId, messageId }));
+        console.log("found-like", messageId, chatHistory);
+    };
+
+    const handleChatDislike = (messageId: string) => {
+        dispatch(ChatActions.setDislikeMessage({ chatId: activeChatId, messageId }));
+        console.log("found-dislike", messageId, chatHistory);
+    };
+
+
     return (
-        <div className="chat-container">
-            <p className="welcome-msg">Welcome to the chat!</p>
+        <div className="new-chat-container">
+            {/* <p className="welcome-msg">Welcome to the chat!</p> */}
 
             <div className="chat-history" ref={chatContainerRef}>
-                {chatHistory.map((message, index) => (
-                    <div key={index} className={`message ${message.author}`}>
-                        <div className="msg-wrapper">
+                {activeChatHistory.map((message, index) => (
+                    <div key={index} className={`message ${message.author === AuthorEnum.BOT ? "assistant" : "user"}`}>
+                        <div className={`msg-wrapper `}>
                             <div className="msg-role">
                                 {message.author === AuthorEnum.BOT ? (
                                     <img src={bot} alt="bot" className="bot" />
@@ -102,11 +128,19 @@ const Chat: React.FC = () => {
                             </div>
                             <p className="msg">{message.content}</p>
                         </div>
+                        {
+                            message.author === AuthorEnum.BOT ?
+                                <div className="msg-status">
+                                    <span className={`icon ${message.status === ChatInteractionStatusEnum.LIKE ? 'liked' : ''}`} onClick={() => handleChatLike(message.id)}><AiFillLike /></span>
+                                    <span className={`icon ${message.status === ChatInteractionStatusEnum.DISLIKE ? 'disliked' : ''}`} onClick={() => handleChatDislike(message.id)}><AiFillDislike /></span>
+                                </div> : null
+                        }
                     </div>
                 ))}
             </div>
             <div className="input-container">
                 <input
+                    className="input-field"
                     ref={inputRef}
                     type="text"
                     value={userMessage}
@@ -114,8 +148,11 @@ const Chat: React.FC = () => {
                     placeholder={chatLoading ? "Loading..." : "Type a message..."}
                     onKeyDown={handleKeyPress}
                 />
-                <button onClick={sendMessage} disabled={chatLoading}>
+                <button onClick={sendMessage} disabled={chatLoading} className="send-btn">
                     {chatLoading ? <span className="loader"></span> : "Send"}
+                </button>
+                <button onClick={handleChatEnd} disabled={chatLoading} className="end-btn">
+                    End Chat
                 </button>
             </div>
         </div>

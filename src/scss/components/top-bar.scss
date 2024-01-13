@@ -1,0 +1,22 @@
+.top-bar-container {
+  padding: 15px 20px;
+  width: 100%;
+  @include flexRow(space-between, center);
+  gap: 0;
+  .logo {
+    color: rgb(0, 131, 87);
+  }
+  .top-bar-right {
+    width: 30%;
+    @include flexRow(flex-end, center);
+    gap: 30px;
+
+    .navigation {
+      cursor: pointer;
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+    }
+  }
+}

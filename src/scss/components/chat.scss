@@ -1,144 +1,185 @@
-.chat-container {
-  max-width: calc(100vw - 40px);
-  height: calc(100vh - 80px);
+.new-chat-container {
+  max-width: 100%;
+  position: relative;
+  min-height: calc(100vh - 120px);
+  height: calc(100vh - 120px);
   margin: 20px auto;
   border: 1px solid #ccc;
   padding: 10px;
   border-radius: 8px;
-  overflow: hidden; /* Hide overflow to clip the rounded borders */
-  display: flex;
-  flex-direction: column; /* Reverse the order of the flex container */
-}
-
-.welcome-msg {
-  text-align: center;
-  margin-bottom: 10px;
-  font-weight: bold;
-  font-size: 18px;
-  color: #333;
-}
-
-.chat-history {
-  height: calc(100vh - 140px);
-  overflow-y: auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: flex-end; /* Align messages to the right */
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: auto; /* Push messages to the bottom of the container */
+  background-color: #f9f9f9;
+
+  // .welcome-msg {
+  //   position: absolute;
+  //   top: 0;
+  //   left: 50%;
+  //   text-align: center;
+  //   margin-bottom: 10px;
+  //   font-weight: bold;
+  //   font-size: 18px;
+  //   color: #333;
+  // }
+
+  .chat-history {
+    width: 100%;
+    height: max-content;
+    max-height: calc(100vh - 200px);
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: darken(#ccc, 20%);
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: lighten(#ccc, 20%);
+    }
+
+    .message {
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      margin-bottom: 10px;
+
+      &.user {
+        flex-direction: row-reverse;
+        .msg {
+          background-color: #e0f7fa;
+        }
+      }
+
+      &.assistant {
+        flex-direction: row;
+        .msg {
+          background-color: #dbeedc;
+        }
+      }
+
+      .msg-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        .msg {
+          max-width: 80%;
+          padding: 10px;
+          border-radius: 15px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          font-size: 16px;
+          line-height: 1.5;
+          word-wrap: break-word;
+        }
+
+        .msg-role {
+          flex-shrink: 0;
+          .bot,
+          .user {
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+        }
+      }
+
+      .msg-status {
+        .icon {
+          &.liked {
+            color: #4caf50;
+          }
+          &.disliked {
+            color: #f44336;
+          }
+        }
+      }
+    }
+  }
+
+  .input-container {
+    width: 100%;
+    display: flex;
+    padding: 10px 0;
+
+    .input-field {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-right: 10px;
+
+      &:focus {
+        outline: none;
+        border-color: #4caf50;
+      }
+    }
+
+    .send-btn {
+      min-width: 100px;
+      margin-right: 10px;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4caf50;
+      border: 1px solid transparent;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: darken(#4caf50, 10%);
+      }
+
+      &:disabled {
+        background-color: lighten(#4caf50, 10%);
+        cursor: not-allowed;
+      }
+
+      .loader {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #3498db;
+        border-radius: 50%;
+        width: 12px;
+        height: 12px;
+        animation: spin 1s linear infinite;
+      }
+    }
+
+    .end-btn {
+      min-width: 100px;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      color: #4caf50;
+      background-color: white;
+      border: 1px solid #4caf50;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        color: darken(#4caf50, 10%);
+      }
+
+      &:disabled {
+        color: lighten(#4caf50, 10%);
+        cursor: not-allowed;
+      }
+    }
+  }
 }
 
-.message {
-  width: max-content;
-  max-width: 80%;
-  margin: 5px;
-  padding: 10px;
-
-  font-size: 16px;
-  line-height: 1.5;
-  font-weight: 500;
-  border-radius: 8px;
-  display: inline-block;
-  word-wrap: break-word;
-}
-
-.user {
-  text-align: right;
-  width: max-content;
-  max-width: 80%;
-  background-color: #e0f7fa;
-  align-self: flex-end; /* Align user messages to the right */
-}
-
-.assistant {
-  text-align: left;
-  background-color: #dbeedc;
-  align-self: flex-start; /* Align assistant messages to the left */
-}
-
-/* resetting markdown default style */
-.message p {
-  margin: 0;
-  padding: 0;
-}
-
-.msg-wrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 5px;
-}
-
-.msg-wrapper .msg {
-  width: calc(100% - 30px);
-  text-align: left;
-}
-
-.msg-role {
-  height: 30px;
-  background: #fff;
-  width: 30px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.msg-role .bot,
-.msg-role .user {
-  height: 30px;
-  width: 30px;
-  object-fit: cover;
-}
-
-.system {
-  display: none;
-  text-align: left;
-  background-color: #dbeedc;
-  align-self: flex-start; /* Align assistant messages to the left */
-}
-
-.input-container {
-  margin-top: 10px;
-  display: flex;
-}
-
-input {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-button {
-  width: 100px;
-  margin-left: 10px;
-  padding: 8px;
-  border: 1px solid #4caf50;
-  border-radius: 5px;
-  background-color: #4caf50;
-  color: white;
-  cursor: pointer;
-}
-
-/* loader style */
-
-.loader {
-  width: 12px;
-  height: 12px;
-  border: 5px solid #fff;
-  border-bottom-color: #0d338e;
-  border-radius: 50%;
-  display: inline-block;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
-}
-
-@keyframes rotation {
+@keyframes spin {
   0% {
     transform: rotate(0deg);
   }

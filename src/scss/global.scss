@@ -173,32 +173,22 @@
 @mixin flex-container(
   $direction: row,
   $justify-content: flex-start,
-  $align-items: flex-start,
-  $gap: 0
+  $align-items: flex-start
 ) {
   display: flex;
   flex-direction: $direction;
   justify-content: $justify-content;
   align-items: $align-items;
-  gap: $gap;
 }
 
 @mixin flex-item($flex: 0 1 auto) {
   flex: $flex;
 }
 
-@mixin flexRow(
-  $justify-content: flex-start,
-  $align-items: flex-start,
-  $gap: 0
-) {
-  @include flex-container(row, $justify-content, $align-items, $gap);
+@mixin flexRow($justify-content: flex-start, $align-items: flex-start) {
+  @include flex-container(row, $justify-content, $align-items);
 }
 
-@mixin flexCol(
-  $justify-content: flex-start,
-  $align-items: flex-start,
-  $gap: 0
-) {
-  @include flex-container(column, $justify-content, $align-items, $gap);
+@mixin flexCol($justify-content: flex-start, $align-items: flex-start) {
+  @include flex-container(column, $justify-content, $align-items);
 }

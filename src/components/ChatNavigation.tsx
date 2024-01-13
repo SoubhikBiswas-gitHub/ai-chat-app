@@ -1,6 +1,6 @@
 import { Tooltip } from "@mui/joy";
 import { MdArrowBackIosNew } from "react-icons/md";
-import { useAppDispatch, useAppSelector } from "../redux/stote";
+import { useAppDispatch, useAppSelector } from "../redux/store";
 import { UtilActions } from "../redux/util.slice";
 
 const ChatNavigation = () => {
