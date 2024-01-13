@@ -1,14 +1,16 @@
-import { Box, Input, Modal, ModalClose, Sheet } from '@mui/joy';
-import { FaRegStar, FaStar } from 'react-icons/fa';
+import { Box, Input, Modal, ModalClose, Sheet } from "@mui/joy";
+import { FaRegStar, FaStar } from "react-icons/fa";
+
 interface FeedbackModalProps {
     open: boolean;
-    handleClose: () => void;
     sendFeedback: () => void;
+    handleClose: () => void;
     rating: number;
-    setRating: (newRating: number) => void;
-    setFeedback: (newFeedback: string) => void;
-    handleNewChatOpen: () => void;
+    setRating: React.Dispatch<React.SetStateAction<number>>;
+    setFeedback: React.Dispatch<React.SetStateAction<string>>;
+    handleNewChatOpen: () => void
 }
+
 const FeedbackModal: React.FC<FeedbackModalProps> = ({
     open,
     sendFeedback,
@@ -18,68 +20,52 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({
     setFeedback,
     handleNewChatOpen
 }) => {
-
-
     return (
         <Modal
             aria-labelledby="modal-title"
             aria-describedby="modal-desc"
             open={open}
             onClose={handleClose}
-            sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+            className="modal-container"
         >
-            <Sheet
-                variant="outlined"
-                sx={{
-                    maxWidth: 700,
-                    borderRadius: "md",
-                    p: 3,
-                    boxShadow: "lg",
-                }}
-            >
-                <ModalClose variant="plain" sx={{ m: 1 }} onClick={handleClose} />
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        margin: "15px 10px",
-                        gap: 3,
-                    }}
-                >
-                    <p>Give Feedback</p>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Sheet variant="outlined"
+
+
+                className="sheet-container">
+                <ModalClose variant="plain" className="modal-close" onClick={handleClose} />
+                <Box className="box-container">
+                    <p className="p-1 text">Give Feedback</p>
+                    <Box className="star-container">
                         {[1, 2, 3, 4, 5].map((item) => {
-                            if (item <= rating) {
-                                return (
-                                    <FaStar
-                                        style={{ color: "var(--yellow-400)", cursor: "pointer" }}
-                                        key={item}
-                                        onClick={() => setRating(item)}
-                                    />
-                                );
-                            }
                             return (
-                                <FaRegStar
-                                    style={{ color: "var(--yellow-400)", cursor: "pointer" }}
+                                <span
                                     key={item}
+                                    className={`star ${item <= rating ? 'selected' : ''}`}
                                     onClick={() => setRating(item)}
-                                />
+                                >
+                                    {item <= rating ? <FaStar /> : <FaRegStar />}
+                                </span>
                             );
                         })}
                     </Box>
 
                     <Input
+                        className="feedback-input"
                         placeholder="Please provide feedback here"
                         onChange={(e) => setFeedback(e.target.value)}
                     />
-
-                    <button onClick={sendFeedback}>Submit Feedback</button>
-                    <button onClick={handleNewChatOpen}>Submit Feedback</button>
+                    <div className="button-container">
+                        <button className="submit-button" onClick={sendFeedback}>
+                            Submit Feedback
+                        </button>
+                        <button className="new-chat-button" onClick={handleNewChatOpen}>
+                            Open New Chat
+                        </button>
+                    </div>
                 </Box>
             </Sheet>
         </Modal>
-    )
-}
+    );
+};
 
-export default FeedbackModal
+export default FeedbackModal;

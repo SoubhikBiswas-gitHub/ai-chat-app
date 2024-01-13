@@ -1,3 +1,4 @@
+import { Rating } from "@mui/material";
 import { nanoid } from "@reduxjs/toolkit";
 import React, { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
@@ -7,6 +8,8 @@ import { ChatActions } from "../redux/chat.slice";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import { AuthorEnum, ChatInteractionStatusEnum, Message } from "../types/chat.type";
 import FeedbackModal from "./FeedbackModal";
+import { notifyError } from "../notification";
+import { ThemeEnum } from "../types/util.type";
 
 interface ChatProps {
     chatIdProps?: string
@@ -16,7 +19,8 @@ const Chat: React.FC<ChatProps> = ({
     chatIdProps
 }) => {
     const dispatch = useAppDispatch();
-    const { chatsContent, activeChatId } = useAppSelector(state => state.chat);
+    const { themeState } = useAppSelector(state => state.util);
+    const { chatsContent, activeChatId, chatsList } = useAppSelector(state => state.chat);
     const chatContainerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
@@ -26,6 +30,7 @@ const Chat: React.FC<ChatProps> = ({
     const [chatHistory, setChatHistory] = useState<Message[]>([]);
     const [chatLoading, setChatLoading] = useState<boolean>(false);
     const [chatData, setChatData] = useState<Array<Message>>([]);
+
 
 
     useEffect(() => {
@@ -121,7 +126,11 @@ const Chat: React.FC<ChatProps> = ({
     };
 
     const handleChatEnd = () => {
-        setShowFeedbackModal(true);
+        if (chatData && chatData.length > 0) {
+            setShowFeedbackModal(true);
+        } else {
+            notifyError({ msg: "Please start a new chat first", theme: themeState === ThemeEnum.LIGHT ? "light" : "dark" });
+        }
     }
     const handleCloseFeedbackModal = () => {
         setShowFeedbackModal(false);
@@ -138,7 +147,12 @@ const Chat: React.FC<ChatProps> = ({
     };
 
     const handleOpenNewChat = () => {
-        dispatch(ChatActions.setActiveChatId(nanoid()));
+        const data = confirm("Are you sure you want to start a new chat?  You will be lost your current chat history. To save your current chat history end the chat first");
+        if (data) {
+            dispatch(ChatActions.setActiveChatId(nanoid()));
+        } else {
+            setShowFeedbackModal(false);
+        }
 
     }
 
@@ -146,6 +160,18 @@ const Chat: React.FC<ChatProps> = ({
         dispatch(ChatActions.updateChatFeedback({ chatId: activeChatId, feedback, rating }));
         setShowFeedbackModal(false);
     };
+
+    const getFeedbackData = () => {
+        const currentData = chatsList?.find((chat) => chat.id === activeChatId)
+        if (currentData) {
+            setFeedback(currentData.feedback)
+            setRating(currentData.rating)
+        }
+    }
+
+    useEffect(() => {
+        getFeedbackData()
+    }, [])
 
 
     return (
@@ -182,9 +208,18 @@ const Chat: React.FC<ChatProps> = ({
                     </div>
                 ))}
             </div>
-            <div className="feedback-data">
 
-            </div>
+            {
+                chatsList?.some(chat => chat.id === activeChatId) &&
+                <div className="feedback-data">
+                    <p className="h-4 feedback-title">Feedback</p>
+                    <div className="rating">
+                        <Rating name="read-only" value={rating} readOnly />
+                    </div>
+                    <p className="p-1 feedback-text">{feedback}</p>
+                </div>
+            }
+
             <div className="input-container">
                 <input
                     className="input-field"

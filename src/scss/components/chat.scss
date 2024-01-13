@@ -107,6 +107,12 @@
     }
   }
 
+  .feedback-data {
+    padding: 10px;
+    @include flexCol(center, center);
+    gap: 10px;
+  }
+
   .input-container {
     width: 100%;
     display: flex;
