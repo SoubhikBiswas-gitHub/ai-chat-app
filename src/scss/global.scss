@@ -112,27 +112,9 @@
 // ------------------------------------------------**-Color Panels-**------------------------------------------------
 
 .light-color-panel-1 {
-  color: #2c3e50;
-  border-color: #2c3e50;
-  background-color: #ecf0f1;
-}
-
-.light-color-panel-2 {
-  color: #27ae60;
-  border-color: #27ae60;
-  background-color: #d4ecc1;
-}
-
-.light-color-panel-3 {
-  color: #8e44ad;
-  border-color: #8e44ad;
-  background-color: #f0ebf4;
-}
-
-.light-color-panel-4 {
   color: #34495e;
   border-color: #34495e;
-  background-color: #bdc3c7;
+  background-color: #ecf0f1;
 }
 
 .dark-color-panel-1 {
@@ -141,22 +123,52 @@
   background-color: #34495e;
 }
 
+.light-color-panel-2 {
+  color: rgb(64, 71, 95);
+  border-color: rgb(64, 71, 95);
+  background-color: rgba(194, 194, 254, 0.5);
+}
+
 .dark-color-panel-2 {
-  color: #f0ebf4;
-  border-color: #f0ebf4;
-  background-color: #8e44ad;
+  color: rgba(194, 194, 254, 0.5);
+  border-color: rgba(194, 194, 254, 0.5);
+  background-color: rgb(64, 71, 95);
+}
+
+.light-color-panel-3 {
+  color: #353b4b;
+  border-color: #353b4b;
+  background-color: #fff;
 }
 
 .dark-color-panel-3 {
-  color: #d4ecc1;
-  border-color: #d4ecc1;
-  background-color: #27ae60;
+  color: #fff;
+  border-color: #fff;
+  background-color: #353b4b;
 }
 
-.dark-color-panel-4 {
-  color: #ecf0f1;
-  border-color: #ecf0f1;
-  background-color: #2c3e50;
+.user-l-p {
+  color: #726dfe;
+  border: #726dfe;
+  background: #ecf0f1;
+}
+
+.bot-l-p {
+  color: #454d62;
+  border: #454d62;
+  background: #ecf0f1;
+}
+
+.user-d-p {
+  color: #fff;
+  border: #726dfe;
+  background: #726dfe;
+}
+
+.bot-d-p {
+  color: #fff;
+  border: #454d62;
+  background: #454d62;
 }
 
 // ------------------------------------------------**-Box Shadow-**------------------------------------------------

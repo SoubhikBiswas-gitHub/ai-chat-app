@@ -1,5 +1,6 @@
 .top-bar-container {
   padding: 15px 20px;
+  border-bottom: 2px solid;
   width: 100%;
   @include flexRow(space-between, center);
   gap: 0;

@@ -1,5 +1,4 @@
 import { Tooltip } from "@mui/joy";
-import { nanoid } from "@reduxjs/toolkit";
 import { useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 import { FaCheck } from "react-icons/fa";
@@ -24,7 +23,7 @@ const ChatNavigation = () => {
     };
 
     const handleOpenNewChat = () => {
-        dispatch(ChatActions.setActiveChatId(nanoid()));
+        dispatch(ChatActions.createChat());
     };
 
     const editChatName = (chatId: string, chatName: string) => {
@@ -46,7 +45,7 @@ const ChatNavigation = () => {
     }
 
     return (
-        <div className={`chat-navigation-container ${themeState}-color-panel-4 ${isNavigationOpenState ? "chat-navigation-open" : "chat-navigation-close"}`}>
+        <div className={`chat-navigation-container box-show-2 ${themeState}-color-panel-1 ${isNavigationOpenState ? "chat-navigation-open" : "chat-navigation-close"}`}>
             <div className="navigation-container">
 
                 <Tooltip
@@ -88,10 +87,10 @@ const ChatNavigation = () => {
                                             onChange={handleNameChange}
                                         />
                                         <div className="icons">
-                                            <span className="icon" onClick={() => setEditingChatId('')}>
+                                            <span className="icon" onClick={() => saveEditedName(chat.id)}>
                                                 <FaCheck color="green" />
                                             </span>
-                                            <span className="icon" onClick={() => saveEditedName(chat.id)}>
+                                            <span className="icon" onClick={() => saveEditedName('')}>
                                                 <RxCross2 color="red" size={18} />
                                             </span>
                                         </div>

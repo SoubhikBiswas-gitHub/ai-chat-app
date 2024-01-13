@@ -1,5 +1,4 @@
 import { Tooltip } from "@mui/joy";
-import { nanoid } from "@reduxjs/toolkit";
 import { IoIosCreate } from "react-icons/io";
 import { MdArrowForwardIos } from "react-icons/md";
 import { Route, Routes } from "react-router-dom";
@@ -10,7 +9,7 @@ import Chat from "./Chat";
 
 const ChatWindow = () => {
     // const chatId = nanoid();
-    const { isNavigationOpenState } = useAppSelector(state => state.util);
+    const { isNavigationOpenState, themeState } = useAppSelector(state => state.util);
     const dispatch = useAppDispatch();
     const toggleNavigation = () => {
         dispatch(
@@ -20,10 +19,10 @@ const ChatWindow = () => {
 
 
     const handleOpenNewChat = () => {
-        dispatch(ChatActions.setActiveChatId(nanoid()));
+        dispatch(ChatActions.createChat());
     }
     return (
-        <div className={`chat-window-container ${!isNavigationOpenState ? "full-width" : ""} `}>
+        <div className={`chat-window-container ${themeState}-color-panel-1  ${!isNavigationOpenState ? "full-width" : ""} `}>
             {!isNavigationOpenState ?
                 <div className="sidebar-switch">
                     <Tooltip

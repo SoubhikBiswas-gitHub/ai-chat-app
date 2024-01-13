@@ -19,7 +19,8 @@ export interface Chat {
   id: string;
   chatName: string;
   feedback: string;
-  rating: number;
+  rating: number | null;
+  isEnded: boolean;
 }
 export interface chatsContent {
   [key: string]: Array<Message>;

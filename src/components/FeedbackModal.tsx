@@ -1,5 +1,6 @@
 import { Box, Input, Modal, ModalClose, Sheet } from "@mui/joy";
 import { FaRegStar, FaStar } from "react-icons/fa";
+import { ThemeEnum } from "../types/util.type";
 
 interface FeedbackModalProps {
     open: boolean;
@@ -9,6 +10,7 @@ interface FeedbackModalProps {
     setRating: React.Dispatch<React.SetStateAction<number>>;
     setFeedback: React.Dispatch<React.SetStateAction<string>>;
     handleNewChatOpen: () => void
+    themeState: ThemeEnum
 }
 
 const FeedbackModal: React.FC<FeedbackModalProps> = ({
@@ -18,7 +20,8 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({
     rating,
     setRating,
     setFeedback,
-    handleNewChatOpen
+    handleNewChatOpen,
+    themeState
 }) => {
     return (
         <Modal
@@ -31,9 +34,9 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({
             <Sheet variant="outlined"
 
 
-                className="sheet-container">
+                className={`sheet-container ${themeState}-color-panel-1`}>
                 <ModalClose variant="plain" className="modal-close" onClick={handleClose} />
-                <Box className="box-container">
+                <Box className={`box-container `}>
                     <p className="p-1 text">Give Feedback</p>
                     <Box className="star-container">
                         {[1, 2, 3, 4, 5].map((item) => {

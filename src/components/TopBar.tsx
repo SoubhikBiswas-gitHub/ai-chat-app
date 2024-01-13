@@ -4,7 +4,7 @@ import ThemeToggleSwitch from "./ThemeToggleSwitch"
 const TopBar = () => {
     const { themeState } = useAppSelector(state => state.util)
     return (
-        <div className={`top-bar-container ${themeState}-color-panel-4 } `}>
+        <div className={`top-bar-container box-show-2 ${themeState}-color-panel-2 } `}>
             <p className="h-2 logo ">Soul.AI</p>
             <div className="top-bar-right">
                 <div className="p-2 navigation">

@@ -1,23 +1,21 @@
 import { Rating } from "@mui/material";
 import { nanoid } from "@reduxjs/toolkit";
-import React, { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import bot from "../assets/machine.png";
 import user from "../assets/user.png";
+import { notifyError } from "../notification";
 import { ChatActions } from "../redux/chat.slice";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import { AuthorEnum, ChatInteractionStatusEnum, Message } from "../types/chat.type";
-import FeedbackModal from "./FeedbackModal";
-import { notifyError } from "../notification";
 import { ThemeEnum } from "../types/util.type";
+import FeedbackModal from "./FeedbackModal";
 
 interface ChatProps {
     chatIdProps?: string
 }
 
-const Chat: React.FC<ChatProps> = ({
-    chatIdProps
-}) => {
+const Chat: React.FC<ChatProps> = () => {
     const dispatch = useAppDispatch();
     const { themeState } = useAppSelector(state => state.util);
     const { chatsContent, activeChatId, chatsList } = useAppSelector(state => state.chat);
@@ -31,18 +29,19 @@ const Chat: React.FC<ChatProps> = ({
     const [chatLoading, setChatLoading] = useState<boolean>(false);
     const [chatData, setChatData] = useState<Array<Message>>([]);
 
+    const currentData = useMemo(() => chatsList?.find((chat) => chat.id === activeChatId), [activeChatId, chatsList]);
 
 
     useEffect(() => {
-        dispatch(ChatActions.setActiveChatId(nanoid()));
-    }, [dispatch, chatIdProps]);
+        if (!activeChatId) {
+            dispatch(ChatActions.createChat());
+        }
+    }, []);
 
-    // const activeChatHistory = chatsContent && chatsContent[activeChatId] ? chatsContent[activeChatId] : [];
 
     useEffect(() => {
         if (chatsContent && chatsContent[activeChatId]) {
             const activeChatHistory = chatsContent[activeChatId];
-            console.log("activeChatHistory", activeChatHistory);
             setChatData(
                 [...activeChatHistory]
             )
@@ -68,11 +67,21 @@ const Chat: React.FC<ChatProps> = ({
 
 
     useEffect(() => {
-        setChatHistory([]);
-        setRating(0);
-        setFeedback("");
-        setShowFeedbackModal(false);
+        if (activeChatId && chatsContent && chatsContent[activeChatId]) {
+            setChatHistory(chatsContent[activeChatId]);
+            setRating(0);
+            setFeedback("");
+            setShowFeedbackModal(false);
+        }
     }, [activeChatId])
+
+    useEffect(() => {
+        if (activeChatId) {
+            if (currentData && currentData.isEnded) {
+                getFeedbackData();
+            }
+        }
+    }, [currentData, activeChatId]);
 
 
     let callCount = 0;
@@ -149,7 +158,7 @@ const Chat: React.FC<ChatProps> = ({
     const handleOpenNewChat = () => {
         const data = confirm("Are you sure you want to start a new chat?  You will be lost your current chat history. To save your current chat history end the chat first");
         if (data) {
-            dispatch(ChatActions.setActiveChatId(nanoid()));
+            dispatch(ChatActions.createChat());
         } else {
             setShowFeedbackModal(false);
         }
@@ -162,21 +171,26 @@ const Chat: React.FC<ChatProps> = ({
     };
 
     const getFeedbackData = () => {
-        const currentData = chatsList?.find((chat) => chat.id === activeChatId)
         if (currentData) {
             setFeedback(currentData.feedback)
-            setRating(currentData.rating)
+            setRating(currentData.rating || 0)
         }
     }
 
-    useEffect(() => {
-        getFeedbackData()
-    }, [])
+    const getChatClass = (type: AuthorEnum) => {
+        if (themeState === ThemeEnum.DARK) {
+            return type === AuthorEnum.BOT ? "bot-d-p" : "user-d-p";
+        } else {
+            return type === AuthorEnum.BOT ? "bot-l-p" : "user-l-p";
+        }
+
+    }
 
 
     return (
-        <div className="new-chat-container">
+        <div className={`new-chat-container box-show-2 ${themeState}-color-panel-3`}>
             <FeedbackModal
+                themeState={themeState}
                 open={showFeedbackModal}
                 sendFeedback={handleSendFeedback}
                 handleClose={handleCloseFeedbackModal}
@@ -185,9 +199,9 @@ const Chat: React.FC<ChatProps> = ({
                 setFeedback={setFeedback}
                 handleNewChatOpen={handleOpenNewChat}
             />
-            <div className="chat-history" ref={chatContainerRef}>
+            <div className={`chat-history ${themeState}-color-panel-3`} ref={chatContainerRef}>
                 {chatData.map((message, index) => (
-                    <div key={index} className={`message ${message.author === AuthorEnum.BOT ? "assistant" : "user"}`}>
+                    <div key={index} className={`message ${message.author === AuthorEnum.BOT && themeState ? "assistant" : "user"}`}>
                         <div className={`msg-wrapper `}>
                             <div className="msg-role">
                                 {message.author === AuthorEnum.BOT ? (
@@ -196,7 +210,7 @@ const Chat: React.FC<ChatProps> = ({
                                     <img src={user} alt="bot" className="user" />
                                 )}
                             </div>
-                            <p className="msg">{message.content}</p>
+                            <p className={`msg ${getChatClass(message.author)} `}>{message.content}</p>
                         </div>
                         {
                             message.author === AuthorEnum.BOT ?
@@ -210,14 +224,14 @@ const Chat: React.FC<ChatProps> = ({
             </div>
 
             {
-                chatsList?.some(chat => chat.id === activeChatId) &&
-                <div className="feedback-data">
-                    <p className="h-4 feedback-title">Feedback</p>
-                    <div className="rating">
-                        <Rating name="read-only" value={rating} readOnly />
-                    </div>
-                    <p className="p-1 feedback-text">{feedback}</p>
-                </div>
+                currentData?.isEnded ? chatsList?.some(chat => chat.id === activeChatId) &&
+                    <div className="feedback-data">
+                        <p className="h-4 feedback-title">Feedback</p>
+                        <div className="rating">
+                            <Rating name="read-only" value={rating} readOnly />
+                        </div>
+                        <p className="p-1 feedback-text">{feedback}</p>
+                    </div> : null
             }
 
             <div className="input-container">

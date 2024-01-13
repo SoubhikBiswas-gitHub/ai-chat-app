@@ -4,14 +4,14 @@
   min-height: calc(100vh - 120px);
   height: calc(100vh - 120px);
   margin: 20px auto;
-  border: 1px solid #ccc;
+  border: 2px solid;
+
   padding: 10px;
   border-radius: 8px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  background-color: #f9f9f9;
 
   // .welcome-msg {
   //   position: absolute;
@@ -56,16 +56,16 @@
 
       &.user {
         flex-direction: row-reverse;
-        .msg {
-          background-color: #e0f7fa;
-        }
+        // .msg {
+        //   background-color: #e0f7fa;
+        // }
       }
 
       &.assistant {
         flex-direction: row;
-        .msg {
-          background-color: #dbeedc;
-        }
+        // .msg {
+        //   background-color: #dbeedc;
+        // }
       }
 
       .msg-wrapper {

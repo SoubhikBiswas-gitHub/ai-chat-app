@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, nanoid } from "@reduxjs/toolkit";
 import { ChatInteractionStatusEnum, ChatState } from "../types/chat.type";
 
 const initialState: ChatState = {
@@ -12,8 +12,26 @@ export const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
+    createChat: (state) => {
+      const chat = {
+        id: nanoid(),
+        chatName: "New Chat",
+        feedback: "",
+        rating: null,
+        isEnded: false,
+      };
+      state.chatsContent = {
+        ...state.chatsContent,
+        [chat.id]: [],
+      };
+      state.chatsList.push(chat);
+      state.activeChatId = chat.id;
+    },
     setChatsContent: (state, action) => {
       state.chatsContent = action.payload;
+    },
+    setChatsList: (state, action) => {
+      state.chatsList = action.payload;
     },
 
     setActiveChatId: (state, action) => {
@@ -59,6 +77,7 @@ export const chatSlice = createSlice({
       if (chatIndex !== -1) {
         state.chatsList[chatIndex].feedback = feedback;
         state.chatsList[chatIndex].rating = rating;
+        state.chatsList[chatIndex].isEnded = true;
       } else {
         let chatName = "New Chat";
         if (state.chatsContent) {
@@ -70,6 +89,7 @@ export const chatSlice = createSlice({
           chatName,
           feedback,
           rating,
+          isEnded: true,
         });
       }
     },
