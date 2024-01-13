@@ -23,7 +23,7 @@ const TopBar = () => {
                 <div className="p-2 navigation" onClick={handleNavigate}>
                     {location.pathname === '/feedback' ?
                         <span className="text"><MdOutlineHome size={18} /> Home</span> :
-                        <span className="text"><TiDocumentText size={18} />Review
+                        <span className="text"><TiDocumentText size={18} />Chat Feedback
                         </span>
 
                     }
