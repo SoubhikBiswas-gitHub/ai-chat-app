@@ -5,7 +5,8 @@
   @include flexRow(space-between, center);
   gap: 0;
   .logo {
-    color: rgb(0, 131, 87);
+    color: rgb(4, 170, 115);
+    cursor: pointer;
   }
   .top-bar-right {
     width: 30%;

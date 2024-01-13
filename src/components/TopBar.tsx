@@ -12,10 +12,13 @@ const TopBar = () => {
         const newPath = location.pathname === '/feedback' ? '/' : '/feedback';
         navigate(newPath);
     }
+    const handleNavigateHome = () => {
+        navigate('/');
+    }
 
     return (
         <div className={`top-bar-container box-show-2 ${themeState}-color-panel-2 } `}>
-            <p className="h-2 logo ">Soul.AI</p>
+            <p className="h-2 logo " onClick={handleNavigateHome}>Soul.AI</p>
             <div className="top-bar-right">
                 <div className="p-2 navigation" onClick={handleNavigate}>
                     {location.pathname === '/feedback' ?

@@ -92,7 +92,7 @@ const Chat: React.FC<ChatProps> = () => {
 
     const simulateGPTResponse = async (message: string): Promise<string> => {
         try {
-            const response = await fetch("http://localhost:5100/chat", {
+            const response = await fetch("https://chat-backend-soubhik.netlify.app/.netlify/functions/api/chat", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
