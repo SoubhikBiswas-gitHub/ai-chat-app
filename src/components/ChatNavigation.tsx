@@ -1,4 +1,5 @@
 import { Tooltip } from "@mui/joy";
+import { useMediaQuery } from "@mui/material";
 import { useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 import { FaCheck } from "react-icons/fa";
@@ -17,7 +18,7 @@ const ChatNavigation = () => {
     const { chatsList } = useAppSelector(state => state.chat);
     const [editingChatId, setEditingChatId] = useState<string>('');
     const [editedName, setEditedName] = useState<string>('');
-
+    const isMobile = useMediaQuery('(max-width: 600px)');
     const toggleNavigation = () => {
         dispatch(UtilActions.setIsNavigationOpenState(!isNavigationOpenState));
     };
@@ -54,7 +55,7 @@ const ChatNavigation = () => {
                     title={"Hide Sidebar"}
                 >
                     <div className="controller" onClick={toggleNavigation}>
-                        <span className="text">Hide Sidebar</span>
+                        {!isMobile ? <span className="text">Hide Sidebar</span> : null}
                         <MdArrowBackIosNew />
 
                     </div>
@@ -65,20 +66,20 @@ const ChatNavigation = () => {
                     title={"Create new chat"}
                 >
                     <div className="controller" onClick={handleOpenNewChat}>
-                        <span className="text">Create New Chat</span>
+                        {!isMobile ? <span className="text">Create New Chat</span> : null}
                         <IoIosCreate />
 
                     </div>
                 </Tooltip>
             </div>
             {chatsList.length > 0 ? <div className="all-chats">
-                <p className="h-4 text">All Chats</p>
+                <p className="h-5 text">All Chats</p>
                 {
 
                     <div className="all-chats">
                         {chatsList?.map((chat, index) => (
                             <div key={index} className="chat-name" onClick={() => handleOpenChat(chat.id)}>
-                                {editingChatId === chat.id ? (
+                                {editingChatId === chat.id && !isMobile ? (
                                     <div className="name">
                                         <input
                                             className="input"
@@ -101,7 +102,7 @@ const ChatNavigation = () => {
                                         <span className="icon" onClick={() => editChatName(chat.id, chat.chatName)}>
                                             <AiFillEdit />
                                         </span>
-                                        <span className="text">{chat.chatName}</span>
+                                        {!isMobile ? <span className="text">{chat.chatName}</span> : null}
                                     </div>
                                 )}
                             </div>

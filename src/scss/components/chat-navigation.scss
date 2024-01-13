@@ -83,3 +83,91 @@
     width: calc(100% - 20px);
   }
 }
+
+@media screen and (max-width: 768px) {
+  .chat-navigation-container {
+    width: 20%;
+    height: 100%;
+    border-right: 2px solid;
+    overflow: hidden;
+    transition: width 0.5s ease-in-out;
+    padding: 20px 0px;
+    &.chat-navigation-open {
+      width: 20%;
+    }
+
+    &.chat-navigation-close {
+      width: 0%;
+    }
+
+    .navigation-container {
+      margin: 0 10px;
+      width: calc(100% - 20px);
+      @include flexCol(flex-start, center);
+      gap: 10px;
+
+      .controller {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid;
+        border-radius: 4px;
+        font-size: 24px;
+        cursor: pointer;
+        @include flexRow(space-between, center);
+        gap: 10px;
+
+        .text {
+          font-size: 14px;
+        }
+      }
+    }
+
+    .all-chats {
+      // margin: 0 10px;
+      margin-left: 10px;
+      margin-top: 10px;
+      width: calc(100% - 20px);
+      .chat-name {
+        width: 100%;
+        margin-bottom: 10px;
+
+        .name {
+          width: 100%;
+          @include flexRow(flex-start, center);
+          gap: 10px;
+          padding: 5px;
+          border: 1px solid;
+          border-radius: 4px;
+          font-size: 24px;
+          .text {
+            font-size: 14px;
+          }
+
+          .icon {
+            cursor: pointer;
+          }
+          .input {
+            width: 80%;
+            font-size: 14px;
+            padding: 5px;
+          }
+          .icons {
+            @include flexRow(center, center);
+            gap: 5px;
+            font-size: 14px;
+
+            .icon {
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+
+    .text-no-chat {
+      margin: 0 10px;
+      margin-top: 10px;
+      width: calc(100% - 20px);
+    }
+  }
+}

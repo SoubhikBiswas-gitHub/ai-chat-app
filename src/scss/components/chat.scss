@@ -197,6 +197,17 @@
   }
 }
 
+@media screen and (max-width: 600px) {
+  .new-chat-container {
+    .input-container {
+      flex-wrap: wrap;
+    }
+    .input-field {
+      margin-bottom: 10px;
+    }
+  }
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
