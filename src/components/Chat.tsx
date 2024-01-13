@@ -49,14 +49,18 @@ const Chat: React.FC<ChatProps> = () => {
     }, [activeChatId, chatsContent]);
 
     useEffect(() => {
-        const scrollToBottom = () => {
+        const scrollToBottom = async () => {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
             const container = chatContainerRef.current;
             if (container) {
                 container.scrollTop = container.scrollHeight;
             }
         };
+
         scrollToBottom();
     }, [chatHistory]);
+
 
     useEffect(() => {
         if (activeChatId) {
@@ -84,16 +88,35 @@ const Chat: React.FC<ChatProps> = () => {
     }, [currentData, activeChatId]);
 
 
-    let callCount = 0;
-    const simulateGPTResponse = async (message: string): Promise<string> => {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        callCount += 1;
 
-        if (callCount % 3 === 0) {
-            throw new Error("Simulated API failure");
+
+    const simulateGPTResponse = async (message: string): Promise<string> => {
+        try {
+            const response = await fetch("http://localhost:5100/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ message })
+            });
+
+            if (!response.ok) {
+
+                notifyError({ msg: "Error fetching GPT response", theme: themeState === ThemeEnum.LIGHT ? "light" : "dark" });
+            }
+
+            const data = await response.json();
+            return data.response as string;
+        } catch (error) {
+            console.error('Error fetching GPT response:', error);
+            notifyError({ msg: "Error fetching GPT response", theme: themeState === ThemeEnum.LIGHT ? "light" : "dark" });
+
+            throw error;
         }
-        return `Response to ${message}`;
     };
+
+
+
 
     const sendMessage = async () => {
         if (chatLoading || !userMessage.trim()) return;
