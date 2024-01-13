@@ -48,52 +48,9 @@
       background: lighten(#ccc, 20%);
     }
 
-    .message {
-      width: 100%;
-      display: flex;
-      align-items: flex-end;
-      margin-bottom: 10px;
-
-      &.user {
-        flex-direction: row-reverse;
-        // .msg {
-        //   background-color: #e0f7fa;
-        // }
-      }
-
-      &.assistant {
-        flex-direction: row;
-        // .msg {
-        //   background-color: #dbeedc;
-        // }
-      }
-
-      .msg-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        .msg {
-          max-width: 80%;
-          padding: 10px;
-          border-radius: 15px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          font-size: 16px;
-          line-height: 1.5;
-          word-wrap: break-word;
-        }
-
-        .msg-role {
-          flex-shrink: 0;
-          .bot,
-          .user {
-            height: 30px;
-            width: 30px;
-            border-radius: 50%;
-            object-fit: cover;
-          }
-        }
-      }
-
+    .msg-all-container {
+      @include flexCol(flex-start, flex-start);
+      flex-direction: column-reverse;
       .msg-status {
         .icon {
           &.liked {
@@ -101,6 +58,58 @@
           }
           &.disliked {
             color: #f44336;
+          }
+        }
+      }
+      .message {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-bottom: 15px;
+
+        &.user {
+          flex-direction: row-reverse;
+        }
+
+        &.assistant {
+          flex-direction: row;
+        }
+
+        .msg-wrapper {
+          max-width: 80%;
+          width: max-content;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          &.assistant-wrap {
+            justify-content: flex-start;
+          }
+
+          &.user-wrap {
+            justify-content: flex-end;
+          }
+
+          .msg {
+            max-width: 75%;
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            line-height: 1.5;
+            word-wrap: break-word;
+          }
+
+          .msg-role {
+            flex-shrink: 0;
+            .bot,
+            .user {
+              height: 30px;
+              width: 30px;
+              border-radius: 50%;
+              object-fit: cover;
+            }
           }
         }
       }

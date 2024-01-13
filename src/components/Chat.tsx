@@ -224,17 +224,7 @@ const Chat: React.FC<ChatProps> = () => {
             />
             <div className={`chat-history ${themeState}-color-panel-3`} ref={chatContainerRef}>
                 {chatData.map((message, index) => (
-                    <div key={index} className={`message ${message.author === AuthorEnum.BOT && themeState ? "assistant" : "user"}`}>
-                        <div className={`msg-wrapper `}>
-                            <div className="msg-role">
-                                {message.author === AuthorEnum.BOT ? (
-                                    <img src={bot} alt="bot" className="bot" />
-                                ) : (
-                                    <img src={user} alt="bot" className="user" />
-                                )}
-                            </div>
-                            <p className={`msg ${getChatClass(message.author)} `}>{message.content}</p>
-                        </div>
+                    <div className="msg-all-container">
                         {
                             message.author === AuthorEnum.BOT ?
                                 <div className="msg-status">
@@ -242,6 +232,20 @@ const Chat: React.FC<ChatProps> = () => {
                                     <span className={`icon ${message.status === ChatInteractionStatusEnum.DISLIKE ? 'disliked' : ''}`} onClick={() => handleChatDislike(message.id)}><AiFillDislike /></span>
                                 </div> : null
                         }
+
+                        <div key={index} className={`message ${message.author === AuthorEnum.BOT && themeState ? "assistant" : "user"}`}>
+                            <div className={`msg-wrapper ${message.author === AuthorEnum.BOT && themeState ? "assistant-wrap" : "user-wrap"}`}>
+                                <div className="msg-role">
+                                    {message.author === AuthorEnum.BOT ? (
+                                        <img src={bot} alt="bot" className="bot" />
+                                    ) : (
+                                        <img src={user} alt="bot" className="user" />
+                                    )}
+                                </div>
+                                <p className={`msg ${getChatClass(message.author)} `}>{message.content}</p>
+                            </div>
+
+                        </div>
                     </div>
                 ))}
             </div>
