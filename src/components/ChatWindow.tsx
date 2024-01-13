@@ -9,7 +9,7 @@ import { UtilActions } from "../redux/util.slice";
 import Chat from "./Chat";
 
 const ChatWindow = () => {
-    const chatId = nanoid();
+    // const chatId = nanoid();
     const { isNavigationOpenState } = useAppSelector(state => state.util);
     const dispatch = useAppDispatch();
     const toggleNavigation = () => {
@@ -17,6 +17,7 @@ const ChatWindow = () => {
             UtilActions.setIsNavigationOpenState(!isNavigationOpenState)
         )
     }
+
 
     const handleOpenNewChat = () => {
         dispatch(ChatActions.setActiveChatId(nanoid()));
@@ -51,7 +52,6 @@ const ChatWindow = () => {
             <div className={`chat-container ${isNavigationOpenState ? "open" : "close"}`}>
                 <Routes>
                     <Route path="/" element={<Chat />} />
-                    <Route path={`/chat/${chatId}`} element={<Chat />} />
                 </Routes>
             </div>
         </div>

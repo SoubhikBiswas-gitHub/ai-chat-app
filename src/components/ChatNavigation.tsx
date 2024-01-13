@@ -6,14 +6,14 @@ import { FaCheck } from "react-icons/fa";
 import { IoIosCreate } from "react-icons/io";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
-import { useNavigate } from "react-router-dom";
 import { ChatActions } from "../redux/chat.slice";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import { UtilActions } from "../redux/util.slice";
 
+
+
 const ChatNavigation = () => {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
     const { themeState, isNavigationOpenState } = useAppSelector(state => state.util);
     const { chatsList } = useAppSelector(state => state.chat);
     const [editingChatId, setEditingChatId] = useState<string>('');
@@ -37,13 +37,12 @@ const ChatNavigation = () => {
     };
 
     const saveEditedName = (chatId: string) => {
-        // Dispatch action to save the edited name
         dispatch(ChatActions.updateChatName({ chatId, chatName: editedName }));
         setEditingChatId('');
     };
 
     const handleOpenChat = (chatId: string) => {
-        navigate(`/chat/${chatId}`);
+        dispatch(ChatActions.setActiveChatId(chatId));
     }
 
     return (

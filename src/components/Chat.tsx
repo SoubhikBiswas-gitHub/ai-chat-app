@@ -8,7 +8,13 @@ import { useAppDispatch, useAppSelector } from "../redux/store";
 import { AuthorEnum, ChatInteractionStatusEnum, Message } from "../types/chat.type";
 import FeedbackModal from "./FeedbackModal";
 
-const Chat: React.FC = () => {
+interface ChatProps {
+    chatIdProps?: string
+}
+
+const Chat: React.FC<ChatProps> = ({
+    chatIdProps
+}) => {
     const dispatch = useAppDispatch();
     const { chatsContent, activeChatId } = useAppSelector(state => state.chat);
     const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -19,12 +25,24 @@ const Chat: React.FC = () => {
     const [userMessage, setUserMessage] = useState<string>("");
     const [chatHistory, setChatHistory] = useState<Message[]>([]);
     const [chatLoading, setChatLoading] = useState<boolean>(false);
+    const [chatData, setChatData] = useState<Array<Message>>([]);
+
 
     useEffect(() => {
         dispatch(ChatActions.setActiveChatId(nanoid()));
-    }, [dispatch]);
+    }, [dispatch, chatIdProps]);
 
-    const activeChatHistory = chatsContent && chatsContent[activeChatId] ? chatsContent[activeChatId] : [];
+    // const activeChatHistory = chatsContent && chatsContent[activeChatId] ? chatsContent[activeChatId] : [];
+
+    useEffect(() => {
+        if (chatsContent && chatsContent[activeChatId]) {
+            const activeChatHistory = chatsContent[activeChatId];
+            console.log("activeChatHistory", activeChatHistory);
+            setChatData(
+                [...activeChatHistory]
+            )
+        }
+    }, [activeChatId, chatsContent]);
 
     useEffect(() => {
         const scrollToBottom = () => {
@@ -33,8 +51,6 @@ const Chat: React.FC = () => {
                 container.scrollTop = container.scrollHeight;
             }
         };
-
-
         scrollToBottom();
     }, [chatHistory]);
 
@@ -144,7 +160,7 @@ const Chat: React.FC = () => {
                 handleNewChatOpen={handleOpenNewChat}
             />
             <div className="chat-history" ref={chatContainerRef}>
-                {activeChatHistory.map((message, index) => (
+                {chatData.map((message, index) => (
                     <div key={index} className={`message ${message.author === AuthorEnum.BOT ? "assistant" : "user"}`}>
                         <div className={`msg-wrapper `}>
                             <div className="msg-role">
@@ -165,6 +181,9 @@ const Chat: React.FC = () => {
                         }
                     </div>
                 ))}
+            </div>
+            <div className="feedback-data">
+
             </div>
             <div className="input-container">
                 <input
