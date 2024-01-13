@@ -13,9 +13,10 @@ export const chatSlice = createSlice({
   initialState,
   reducers: {
     createChat: (state) => {
+      let count = 1;
       const chat = {
         id: nanoid(),
-        chatName: "New Chat",
+        chatName: `New chat ${count++}`,
         feedback: "",
         rating: null,
         isEnded: false,
@@ -29,6 +30,19 @@ export const chatSlice = createSlice({
     },
     setChatsContent: (state, action) => {
       state.chatsContent = action.payload;
+      const activeChat =
+        state.chatsContent && state.chatsContent[state.activeChatId];
+      if (
+        state.activeChatId &&
+        activeChat &&
+        activeChat.length >= 1 &&
+        activeChat.length < 2
+      ) {
+        const chatName: string = activeChat[0]?.content;
+        state.chatsList = state.chatsList.map((chat) =>
+          chat.id === state.activeChatId ? { ...chat, chatName } : chat
+        );
+      }
     },
     setChatsList: (state, action) => {
       state.chatsList = action.payload;

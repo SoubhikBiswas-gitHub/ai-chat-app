@@ -224,7 +224,7 @@ const Chat: React.FC<ChatProps> = () => {
             />
             <div className={`chat-history ${themeState}-color-panel-3`} ref={chatContainerRef}>
                 {chatData.map((message, index) => (
-                    <div className="msg-all-container">
+                    <div className="msg-all-container" key={index}>
                         {
                             message.author === AuthorEnum.BOT ?
                                 <div className="msg-status">
@@ -252,7 +252,7 @@ const Chat: React.FC<ChatProps> = () => {
 
             {
                 currentData?.isEnded ? chatsList?.some(chat => chat.id === activeChatId) &&
-                    <div className="feedback-data">
+                    <div className={`feedback-data ${themeState}-color-panel-2`}>
                         <p className="h-4 feedback-title">Feedback</p>
                         <div className="rating">
                             <Rating name="read-only" value={rating} readOnly />
