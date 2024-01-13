@@ -6,23 +6,25 @@ import user from "../assets/user.png";
 import { ChatActions } from "../redux/chat.slice";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import { AuthorEnum, ChatInteractionStatusEnum, Message } from "../types/chat.type";
+import FeedbackModal from "./FeedbackModal";
 
 const Chat: React.FC = () => {
-    const [userMessage, setUserMessage] = useState<string>("");
-    const [chatHistory, setChatHistory] = useState<Message[]>([]);
-    const [chatLoading, setChatLoading] = useState<boolean>(false);
     const dispatch = useAppDispatch();
     const { chatsContent, activeChatId } = useAppSelector(state => state.chat);
     const chatContainerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement | null>(null);
+    const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
+    const [rating, setRating] = useState<number>(0);
+    const [feedback, setFeedback] = useState<string>("");
+    const [userMessage, setUserMessage] = useState<string>("");
+    const [chatHistory, setChatHistory] = useState<Message[]>([]);
+    const [chatLoading, setChatLoading] = useState<boolean>(false);
 
     useEffect(() => {
         dispatch(ChatActions.setActiveChatId(nanoid()));
     }, [dispatch]);
 
     const activeChatHistory = chatsContent && chatsContent[activeChatId] ? chatsContent[activeChatId] : [];
-
-
 
     useEffect(() => {
         const scrollToBottom = () => {
@@ -42,6 +44,14 @@ const Chat: React.FC = () => {
             dispatch(ChatActions.setChatsContent(updatedChatsContent));
         }
     }, [chatHistory, activeChatId, dispatch]);
+
+
+    useEffect(() => {
+        setChatHistory([]);
+        setRating(0);
+        setFeedback("");
+        setShowFeedbackModal(false);
+    }, [activeChatId])
 
 
     let callCount = 0;
@@ -88,8 +98,6 @@ const Chat: React.FC = () => {
         }
     };
 
-
-
     const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
             sendMessage();
@@ -97,7 +105,10 @@ const Chat: React.FC = () => {
     };
 
     const handleChatEnd = () => {
-
+        setShowFeedbackModal(true);
+    }
+    const handleCloseFeedbackModal = () => {
+        setShowFeedbackModal(false);
     }
 
     const handleChatLike = (messageId: string) => {
@@ -110,11 +121,28 @@ const Chat: React.FC = () => {
         console.log("found-dislike", messageId, chatHistory);
     };
 
+    const handleOpenNewChat = () => {
+        dispatch(ChatActions.setActiveChatId(nanoid()));
+
+    }
+
+    const handleSendFeedback = () => {
+        dispatch(ChatActions.updateChatFeedback({ chatId: activeChatId, feedback, rating }));
+        setShowFeedbackModal(false);
+    };
+
 
     return (
         <div className="new-chat-container">
-            {/* <p className="welcome-msg">Welcome to the chat!</p> */}
-
+            <FeedbackModal
+                open={showFeedbackModal}
+                sendFeedback={handleSendFeedback}
+                handleClose={handleCloseFeedbackModal}
+                rating={rating}
+                setRating={setRating}
+                setFeedback={setFeedback}
+                handleNewChatOpen={handleOpenNewChat}
+            />
             <div className="chat-history" ref={chatContainerRef}>
                 {activeChatHistory.map((message, index) => (
                     <div key={index} className={`message ${message.author === AuthorEnum.BOT ? "assistant" : "user"}`}>
@@ -155,6 +183,7 @@ const Chat: React.FC = () => {
                     End Chat
                 </button>
             </div>
+
         </div>
     );
 };

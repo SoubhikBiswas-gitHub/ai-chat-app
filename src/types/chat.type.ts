@@ -14,15 +14,15 @@ export interface Message {
   author: AuthorEnum;
   status: ChatInteractionStatusEnum;
 }
-export interface chatsContent {
-  [key: string]: Array<Message>;
-}
 
 export interface Chat {
   id: string;
   chatName: string;
   feedback: string;
   rating: number;
+}
+export interface chatsContent {
+  [key: string]: Array<Message>;
 }
 
 export interface ChatState {

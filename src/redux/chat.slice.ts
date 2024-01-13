@@ -12,17 +12,22 @@ export const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    setChatsList: (state, action) => {
-      state.chatsList = action.payload;
-    },
     setChatsContent: (state, action) => {
       state.chatsContent = action.payload;
     },
-    setChatMessage: (state, action) => {
-      state.message = action.payload;
-    },
+
     setActiveChatId: (state, action) => {
       state.activeChatId = action.payload;
+    },
+
+    updateChatName: (state, action) => {
+      const { chatId, chatName } = action.payload;
+      console.log("updateChatName", chatId, chatName);
+      if (state.chatsList?.length && chatId && chatName) {
+        state.chatsList = state.chatsList.map((chat) =>
+          chat.id === chatId ? { ...chat, chatName } : chat
+        );
+      }
     },
     setLikeMessage: (state, action) => {
       const { chatId, messageId } = action.payload;
@@ -44,8 +49,28 @@ export const chatSlice = createSlice({
           (message) => message.id === messageId
         );
         if (messageIndex !== -1) {
-          chat[messageIndex].status = ChatInteractionStatusEnum.DISLIKE; // or use an enum if you have it defined
+          chat[messageIndex].status = ChatInteractionStatusEnum.DISLIKE;
         }
+      }
+    },
+    updateChatFeedback: (state, action) => {
+      const { chatId, feedback, rating } = action.payload;
+      const chatIndex = state.chatsList.findIndex((chat) => chat.id === chatId);
+      if (chatIndex !== -1) {
+        state.chatsList[chatIndex].feedback = feedback;
+        state.chatsList[chatIndex].rating = rating;
+      } else {
+        let chatName = "New Chat";
+        if (state.chatsContent) {
+          chatName = state.chatsContent[chatId][0].content;
+        }
+
+        state.chatsList.push({
+          id: chatId,
+          chatName,
+          feedback,
+          rating,
+        });
       }
     },
   },
